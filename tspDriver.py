@@ -5,7 +5,7 @@ from sets import Set
 from IOTSPData import readInput, writeOutput
 
 if (len(sys.argv) != 2):
-    print "Usage: ./nearestNeighbor.py <PATH_TO_INPUT_FILE>"
+    print "Usage: ./tspDriver.py <PATH_TO_INPUT_FILE>"
     print "Example: ./tspDriver.py ./TSP_Files-1/tsp_example_1.txt"
 else:
     # Test InputFunction
