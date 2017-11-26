@@ -4,7 +4,6 @@ import sys
 from datetime import datetime
 from IOTSPData import readInput, writeOutput
 from nearestNeighbor import nearestNeighborAlgorithm, repetitiveNearestNeighbor
-from simulatedAnnealing import simulatedAnnealing
 pathToInputFile = sys.argv[1]
 
 # Function for presenting results
@@ -59,4 +58,5 @@ else:
 
     # Calculate solution using Repetitive Nearest Neighbor Algorithm
     runRepetitiveNearestNeighbor(cities)
+    
     
