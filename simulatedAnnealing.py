@@ -18,7 +18,7 @@ def simulatedAnnealing(listOfCities):
     global numberOfCities
     numberOfCities = len(listOfCities)
     newSolution = []
-    stepMax = 100000
+    stepMax = 50000
     T = 10000
     k = 0
 
@@ -28,8 +28,8 @@ def simulatedAnnealing(listOfCities):
             currentSolution = list(newSolution)
         k += 1
         T *= 0.99995
-    orderedListOfCities = []
 
+    orderedListOfCities = []
     for city in currentSolution:
         orderedListOfCities.append(city.i)
 
@@ -55,4 +55,4 @@ def getNeighbor(currentSolution):
     b = random.randint(0, numberOfCities-a)
     neighbor = list(currentSolution)
     neighbor[b:(b+a)] = reversed(neighbor[b:(b+a)])
-    return list(neighbor)
+    return neighbor
