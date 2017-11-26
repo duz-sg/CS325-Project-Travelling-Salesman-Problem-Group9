@@ -18,21 +18,30 @@ def printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime
     # Write results to output file for verification
     writeOutput(pathToInputFile, distance, orderedListOfCities)
 
+def resetCitiesToUnvisited(cities):
+    for city in cities:
+        city.visited = 0
+
 # Simple Nearest Neighbor Algorithm
 def runNearestNeighbor(cities):
+    resetCitiesToUnvisited(cities)
+    NOT_VISITED = 0
+    VISITED = 1
     title = "Nearest Neighbor Algorithm Starting at Index 0"
     startTime = datetime.now()
-    distance, orderedListOfCities = nearestNeighborAlgorithm(cities, 0)
+    distance, orderedListOfCities = nearestNeighborAlgorithm(cities, 0, NOT_VISITED, VISITED)
     endTime = datetime.now()
     printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
 
 # Repetitive Nearest Neighbor Algorithm
 def runRepetitiveNearestNeighbor(cities):
+    resetCitiesToUnvisited(cities)
     title = "Repetitive Nearest Neighbor Algorithm (Try starting from all indexes and take best)"
     startTime = datetime.now()
     distance, orderedListOfCities = repetitiveNearestNeighbor(cities)
     endTime = datetime.now()
     printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
+
 
 ################################################
 # Main Driver Program

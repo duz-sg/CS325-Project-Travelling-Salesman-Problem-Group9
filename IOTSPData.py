@@ -6,7 +6,7 @@ class city():
     i = ""
     x = ""
     y = ""
-    visited = False
+    visited = 0
 
 ######################################
 # Read from file ./inputFile.txt
