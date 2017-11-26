@@ -1,32 +1,62 @@
 #!/usr/bin/env python
 import math
 import sys
-from sets import Set
+from datetime import datetime
 from IOTSPData import readInput, writeOutput
 from nearestNeighbor import nearestNeighborAlgorithm, repetitiveNearestNeighbor
 from simulatedAnnealing import simulatedAnnealing
+pathToInputFile = sys.argv[1]
 
+# Function for presenting results
+def printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title):
+    # Print results
+    print "\n------------------------------------------"
+    print title
+    print "Total Running Time ", str(endTime - startTime)
+    print "Distance: ", distance
+    print "------------------------------------------\n"
+
+    # Write results to output file for verification
+    writeOutput(pathToInputFile, distance, orderedListOfCities)
+
+def resetCitiesToUnvisited(cities):
+    for city in cities:
+        city.visited = 0
+
+# Simple Nearest Neighbor Algorithm
+def runNearestNeighbor(cities):
+    resetCitiesToUnvisited(cities)
+    NOT_VISITED = 0
+    VISITED = 1
+    title = "Nearest Neighbor Algorithm Starting at Index 0"
+    startTime = datetime.now()
+    distance, orderedListOfCities = nearestNeighborAlgorithm(cities, 0, NOT_VISITED, VISITED)
+    endTime = datetime.now()
+    printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
+
+# Repetitive Nearest Neighbor Algorithm
+def runRepetitiveNearestNeighbor(cities):
+    resetCitiesToUnvisited(cities)
+    title = "Repetitive Nearest Neighbor Algorithm (Try starting from all indexes and take best)"
+    startTime = datetime.now()
+    distance, orderedListOfCities = repetitiveNearestNeighbor(cities)
+    endTime = datetime.now()
+    printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
+
+
+################################################
+# Main Driver Program
+################################################
 if (len(sys.argv) != 2):
     print "Usage: ./tspDriver.py <PATH_TO_INPUT_FILE>"
     print "Example: ./tspDriver.py ./TSP_Files-1/tsp_example_1.txt"
 else:
-    # Test InputFunction
-    pathToInputFile = sys.argv[1]
+    # Read list of cities from input file
     cities = readInput(pathToInputFile)
+    
+    # Calculate solution using Nearest Neighbor Algorithm
+    runNearestNeighbor(cities)
 
-    # for city in cities:
-    #     print city.i, " ", city.x, " ", city.y, " ", city.visited
-
-    # Test output function
-    # fakeDistance = 25
-    # fakeListOfCities = [31, 23, 45]
-    # writeOutput(pathToInputFile, fakeDistance, fakeListOfCities)
-
-    # Calculate solution using algorithm of choice
-
-    # Nearest Neighbor
-    #distance, orderedListOfCities = nearestNeighborAlgorithm(cities, 0)
-    # distance, orderedListOfCities = repetitiveNearestNeighbor(cities)
-    distance, orderedListOfCities = simulatedAnnealing(cities)
-    print('distance: ', distance)
-    writeOutput(pathToInputFile, distance, orderedListOfCities)
+    # Calculate solution using Repetitive Nearest Neighbor Algorithm
+    runRepetitiveNearestNeighbor(cities)
+    
