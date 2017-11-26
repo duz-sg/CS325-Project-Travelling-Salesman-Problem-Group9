@@ -4,6 +4,7 @@ import sys
 from sets import Set
 from IOTSPData import readInput, writeOutput
 from nearestNeighbor import nearestNeighborAlgorithm, repetitiveNearestNeighbor
+from simulatedAnnealing import simulatedAnnealing
 
 if (len(sys.argv) != 2):
     print "Usage: ./tspDriver.py <PATH_TO_INPUT_FILE>"
@@ -25,6 +26,7 @@ else:
 
     # Nearest Neighbor
     #distance, orderedListOfCities = nearestNeighborAlgorithm(cities, 0)
-    distance, orderedListOfCities = repetitiveNearestNeighbor(cities)
+    # distance, orderedListOfCities = repetitiveNearestNeighbor(cities)
+    distance, orderedListOfCities = simulatedAnnealing(cities)
     print('distance: ', distance)
     writeOutput(pathToInputFile, distance, orderedListOfCities)
