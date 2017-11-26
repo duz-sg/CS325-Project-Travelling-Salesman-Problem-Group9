@@ -64,7 +64,7 @@ def repetitiveNearestNeighbor(V):
         # determine path length and order
         d, o = nearestNeighborAlgorithm(V, i)
 
-        # store result if it the new best
+        # store result if it is the new best
         if (d < D):
             D = d
             O = o
