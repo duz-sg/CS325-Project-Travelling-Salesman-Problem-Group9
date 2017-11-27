@@ -14,8 +14,8 @@ def simulatedAnnealing(listOfCities):
     #       s <- snew
     # Output: the final state s
 
-    #currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
-    distance, currentSolution = nearestNeighborAlgorithm(listOfCities, 0, 0, 1) # Init the solution using Nearest Neighbor Algorithm
+    currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
+    #distance, currentSolution = nearestNeighborAlgorithm(listOfCities, 0, 0, 1) # Init the solution using Nearest Neighbor Algorithm
 
     global numberOfCities
     numberOfCities = len(listOfCities)
@@ -23,10 +23,10 @@ def simulatedAnnealing(listOfCities):
     T = 1000
     k = 0
 
-    while T > 0.0000000000001:
+    while T > 0.000000000000001:
         newSolution = getNeighbor(currentSolution)
         if P(E(currentSolution), E(newSolution), T) >= random.random():
-            #print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
+            print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
             currentSolution = list(newSolution)
         k += 1
         T *= 0.9995
