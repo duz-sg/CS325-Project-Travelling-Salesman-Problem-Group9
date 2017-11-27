@@ -5,9 +5,6 @@ from nearestNeighbor import nearestNeighborAlgorithm
 
 global numberOfCities
 
-def findDistance(city1, city2):
-    return int(round(math.sqrt( ((city1.x - city2.x)**2) + ((city1.y - city2.y)**2) )))
-
 def simulatedAnnealing(listOfCities):
     # Let s = s0
     # For k = 0 through kmax (exclusive):
@@ -29,25 +26,18 @@ def simulatedAnnealing(listOfCities):
     while T > 0.0000000000001:
         newSolution = getNeighbor(currentSolution)
         if P(E(currentSolution), E(newSolution), T) >= random.random():
-            print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
+            #print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
             currentSolution = list(newSolution)
-        #if E(currentSolution) < E(bestSolution):
-        #    bestSolution = currentSolution
         k += 1
         T *= 0.9995
-
-    # NOTE: The output function was updated to take in a list of actual cities so we don't need this loop anymore
-    # orderedListOfCities = []
-    # for city in currentSolution:
-    #     orderedListOfCities.append(city.i)
 
     return E(currentSolution), currentSolution
 
 def E(solution):
     # Calculate the total travel distance of the solution
     totalDistance = 0
-    for i in range(0, numberOfCities-1):
-        totalDistance += findDistance(solution[i], solution[i+1])
+    for i in range(0, numberOfCities):
+        totalDistance += findDistance(solution[i-1], solution[i])
     return totalDistance
 
 def P(currentDistance, newDistance, temperature):
@@ -56,6 +46,9 @@ def P(currentDistance, newDistance, temperature):
         return 1
     else:
         return math.exp( -abs(newDistance - currentDistance) / temperature )
+
+def findDistance(city1, city2):
+    return int(round(math.sqrt( ((city1.x - city2.x)**2) + ((city1.y - city2.y)**2) )))
 
 def getNeighbor(currentSolution):
     # Get a random neighbor by reversing a random sub-path of existing solution
