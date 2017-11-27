@@ -32,7 +32,7 @@ def readInput(pathToInputFile):
 ###################################
 def writeOutput(pathToInputFile, totalDistance, listOfCities):
     # for now I will stamp the end with tourTest so that it doesn't overwrite the examples
-    print ("TODO - Change file extension from .tourTest to .tour before submitting project")
+    # TODO - Change file extension from .tourTest to .tour before submitting project
     outputFilePath = pathToInputFile + ".tourTest"
     outputFile = open(outputFilePath, 'w')
 
@@ -42,6 +42,6 @@ def writeOutput(pathToInputFile, totalDistance, listOfCities):
 
     # write the list of cities
     for city in listOfCities:
-        outputFile.write(str(city))
+        outputFile.write(str(city.i))
         outputFile.write("\n")
     outputFile.close()

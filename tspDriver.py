@@ -4,14 +4,15 @@ import sys
 from datetime import datetime
 from IOTSPData import readInput, writeOutput
 from nearestNeighbor import nearestNeighborAlgorithm, repetitiveNearestNeighbor
-pathToInputFile = sys.argv[1]
+from simulatedAnnealing import simulatedAnnealing
+
 
 # Function for presenting results
 def printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title):
     # Print results
-    print "\n------------------------------------------"
+    print "------------------------------------------"
     print title
-    print "Total Running Time ", str(endTime - startTime)
+    print "Total Running Time: ", str(endTime - startTime)
     print "Distance: ", distance
     print "------------------------------------------\n"
 
@@ -24,6 +25,7 @@ def resetCitiesToUnvisited(cities):
 
 # Simple Nearest Neighbor Algorithm
 def runNearestNeighbor(cities):
+    print "Nearest Neighbor..."
     resetCitiesToUnvisited(cities)
     NOT_VISITED = 0
     VISITED = 1
@@ -35,10 +37,21 @@ def runNearestNeighbor(cities):
 
 # Repetitive Nearest Neighbor Algorithm
 def runRepetitiveNearestNeighbor(cities):
+    print "Repetitive Nearest Neighbor..."
     resetCitiesToUnvisited(cities)
     title = "Repetitive Nearest Neighbor Algorithm (Try starting from all indexes and take best)"
     startTime = datetime.now()
     distance, orderedListOfCities = repetitiveNearestNeighbor(cities)
+    endTime = datetime.now()
+    printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
+
+# Simulated Annealing Algorithm
+def runSimulatedAnnealingAlgorithm(cities):
+    print "Simulated Annealing..."
+    resetCitiesToUnvisited(cities)
+    title = "Simulated Annealing Algorithm"
+    startTime = datetime.now()
+    distance, orderedListOfCities = simulatedAnnealing(cities)
     endTime = datetime.now()
     printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
 
@@ -50,13 +63,21 @@ if (len(sys.argv) != 2):
     print "Usage: ./tspDriver.py <PATH_TO_INPUT_FILE>"
     print "Example: ./tspDriver.py ./TSP_Files-1/tsp_example_1.txt"
 else:
-    # Read list of cities from input file
+    # Setup
+    pathToInputFile = sys.argv[1]
     cities = readInput(pathToInputFile)
+
+    print "\nTODO - We should pick only one of these algorithms and comment out the rest"
+    print "TODO - Change file extension from .tourTest to .tour before submitting project\n"
     
-    # Calculate solution using Nearest Neighbor Algorithm
+    # Nearest Neighbor Algorithm (Single run using index 0 as starting city)
     runNearestNeighbor(cities)
 
-    # Calculate solution using Repetitive Nearest Neighbor Algorithm
+    # Repetitive Nearest Neighbor Algorithm
     runRepetitiveNearestNeighbor(cities)
+
+    # Simulated Annealing
+    runSimulatedAnnealingAlgorithm(cities)
+
     
     
