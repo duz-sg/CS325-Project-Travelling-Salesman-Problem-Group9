@@ -29,7 +29,7 @@ def simulatedAnnealing(listOfCities):
     while T > 0.0000000000001:
         newSolution = getNeighbor(currentSolution)
         if P(E(currentSolution), E(newSolution), T) >= random.random():
-            print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
+            #print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
             currentSolution = list(newSolution)
         #if E(currentSolution) < E(bestSolution):
         #    bestSolution = currentSolution
@@ -46,8 +46,8 @@ def simulatedAnnealing(listOfCities):
 def E(solution):
     # Calculate the total travel distance of the solution
     totalDistance = 0
-    for i in range(0, numberOfCities-1):
-        totalDistance += findDistance(solution[i], solution[i+1])
+    for i in range(0, numberOfCities):
+        totalDistance += findDistance(solution[i-1], solution[i])
     return totalDistance
 
 def P(currentDistance, newDistance, temperature):
