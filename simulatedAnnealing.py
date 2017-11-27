@@ -29,11 +29,12 @@ def simulatedAnnealing(listOfCities):
         k += 1
         T *= 0.99995
 
-    orderedListOfCities = []
-    for city in currentSolution:
-        orderedListOfCities.append(city.i)
+    # NOTE: The output function was updated to take in a list of actual cities so we don't need this loop anymore
+    # orderedListOfCities = []
+    # for city in currentSolution:
+    #     orderedListOfCities.append(city.i)
 
-    return E(currentSolution), orderedListOfCities
+    return E(currentSolution), currentSolution
 
 def E(solution):
     # Calculate the total travel distance of the solution

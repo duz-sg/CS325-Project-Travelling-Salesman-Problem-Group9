@@ -17,3 +17,6 @@ else:
 
     print('distance: ', distance)
     writeOutput(pathToInputFile, distance, orderedListOfCities)
+    
+    
+    print "\n NOTE: Running the Simulated Annealing Algorithm from tspDriver.py will give you time data and a formatted output"

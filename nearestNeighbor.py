@@ -29,7 +29,7 @@ def nearestNeighborAlgorithm(V, startingIndex, NOT_VISITED, VISITED):
     C.visited = VISITED
     D = 0
     O = []
-    O.append(C.i)
+    O.append(C)
 
     # Find the order using nearest neighbor algorithm
     while (len(O) < len(V)):
@@ -43,7 +43,7 @@ def nearestNeighborAlgorithm(V, startingIndex, NOT_VISITED, VISITED):
         D = D + distanceToNext
 
         # keep track of order
-        O.append(C.i)
+        O.append(C)
 
     # Add the distance to get back to the starting city
     distanceHome = findDistance(C, V[startingIndex])
