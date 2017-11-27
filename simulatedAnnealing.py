@@ -1,5 +1,7 @@
 import math
 import random
+from random import shuffle
+from nearestNeighbor import nearestNeighborAlgorithm
 
 global numberOfCities
 
@@ -14,20 +16,25 @@ def simulatedAnnealing(listOfCities):
     #   If P(E(s), E(snew), T) >= random(0, 1):
     #       s <- snew
     # Output: the final state s
-    currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
+
+    #currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
+    distance, currentSolution = nearestNeighborAlgorithm(listOfCities, 0, 0, 1) # Init the solution using Nearest Neighbor Algorithm
+
     global numberOfCities
     numberOfCities = len(listOfCities)
     newSolution = []
-    stepMax = 50000
-    T = 10000
+    T = 1000
     k = 0
 
-    while k < stepMax and T > 1:
+    while T > 0.0000000000001:
         newSolution = getNeighbor(currentSolution)
-        if P(E(currentSolution), E(newSolution), T) >= random.randint(0, 1):
+        if P(E(currentSolution), E(newSolution), T) >= random.random():
+            print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
             currentSolution = list(newSolution)
+        #if E(currentSolution) < E(bestSolution):
+        #    bestSolution = currentSolution
         k += 1
-        T *= 0.99995
+        T *= 0.9995
 
     # NOTE: The output function was updated to take in a list of actual cities so we don't need this loop anymore
     # orderedListOfCities = []
