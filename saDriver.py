@@ -7,42 +7,39 @@ from simulatedAnnealing import simulatedAnnealing
 from simulatedAnnealingParallel import simulatedAnnealingParallel
 
 def printUsage():
+    print
     print "Usage: ./saDriver.py <PATH_TO_INPUT_FILE> ([p|s])"
-    print "Example: ./saDriver.py ./TSP_Files-1/tsp_example_1.txt s     # Single Process"
-    print "Example: ./saDriver.py ./TSP_Files-1/tsp_example_1.txt p     # Parallel Run"
+    print "Example: ./saDriver.py ./TSP_Files-1/tsp_example_1.txt fast     # Fast, better speed"
+    print "Example: ./saDriver.py ./TSP_Files-1/tsp_example_1.txt normal   # Normal"
+    print "Example: ./saDriver.py ./TSP_Files-1/tsp_example_1.txt slow     # Slow, shorter distance"
+    print
     return
 
 if (len(sys.argv) != 3):
     printUsage()
-elif sys.argv[2] == 's':
-    # Test InputFunction
-    pathToInputFile = sys.argv[1]
-    cities = readInput(pathToInputFile)
-    # Print results
-    print "------------------------------------------"
-    startTime = datetime.now()
-    distance, orderedListOfCities = simulatedAnnealing(cities)
-    endTime = datetime.now()
-
-    print "Total Running Time: ", str(endTime - startTime)
-    print "Distance: ", distance
-    print "------------------------------------------\n"
-
-    writeOutput(pathToInputFile, distance, orderedListOfCities)
-elif sys.argv[2] == 'p':
-    # Test InputFunction
-    pathToInputFile = sys.argv[1]
-    cities = readInput(pathToInputFile)
-    # Print results
-    print "------------------------------------------"
-    startTime = datetime.now()
-    distance, orderedListOfCities = simulatedAnnealingParallel(cities)
-    endTime = datetime.now()
-
-    print "Total Running Time: ", str(endTime - startTime)
-    print "Distance: ", distance
-    print "------------------------------------------\n"
-
-    writeOutput(pathToInputFile, distance, orderedListOfCities)
 else:
-    printUsage()
+    # Test InputFunction
+    pathToInputFile = sys.argv[1]
+    coolDownRate = 0.99995
+    if sys.argv[2] == 'fast':
+        coolDownRate = 0.9995
+    elif sys.argv[2] == 'normal':
+        coolDownRate = 0.99995
+    elif sys.argv[2] == 'slow':
+        coolDownRate = 0.999995
+    else:
+        printUsage()
+        exit()
+
+    cities = readInput(pathToInputFile)
+    # Print results
+    print "------------------------------------------"
+    startTime = datetime.now()
+    distance, orderedListOfCities = simulatedAnnealing(cities, coolDownRate)
+    endTime = datetime.now()
+
+    print "Total Running Time: ", str(endTime - startTime)
+    print "Distance: ", distance
+    print "------------------------------------------\n"
+
+    writeOutput(pathToInputFile, distance, orderedListOfCities)

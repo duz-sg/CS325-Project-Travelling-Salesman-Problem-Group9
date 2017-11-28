@@ -5,7 +5,7 @@ from nearestNeighbor import nearestNeighborAlgorithm
 
 global numberOfCities
 
-def simulatedAnnealing(listOfCities):
+def simulatedAnnealing(listOfCities, coolDownRate):
     # Let s = s0
     # For k = 0 through kmax (exclusive):
     #   T <- temperature(k / kmax)
@@ -17,9 +17,9 @@ def simulatedAnnealing(listOfCities):
     global numberOfCities
     numberOfCities = len(listOfCities)
     newSolution = []
-    T = 1000                # Temperature
-    C = 0.999995            # Cooling rate
-    S = 0.000000000000001   # Stop temperature
+    T = 1000                        # Temperature
+    C = coolDownRate or 0.99995     # Cooling rate
+    S = 0.000000000000001           # Stop temperature
     k = 0
 
     currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
