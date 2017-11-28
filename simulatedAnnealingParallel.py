@@ -2,10 +2,11 @@ import math
 import random
 from random import shuffle
 from nearestNeighbor import nearestNeighborAlgorithm
+from multiprocessing import Pool
 
 global numberOfCities
 
-def simulatedAnnealing(listOfCities):
+def simulatedAnnealingParallel(listOfCities):
     # Let s = s0
     # For k = 0 through kmax (exclusive):
     #   T <- temperature(k / kmax)
@@ -23,15 +24,28 @@ def simulatedAnnealing(listOfCities):
     T = 1000        # Temperature
     C = 0.99995     # Cooling rate
     k = 0
+    pool = Pool(16)
 
     while T > 0.000000000000001:
-        newSolution = getNeighbor(currentSolution)
+        args = [currentSolution] * 16
+        results = pool.map(getNeighbor, args)
+
+        distances = []
+        for i in results:
+            distances.append(i[0])
+        minDistance = min(distances)
+        for i in results:
+            if i[0] == minDistance:
+                newSolution = i[1]
+
         if P(E(currentSolution), E(newSolution), T) >= random.random():
             print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
             currentSolution = list(newSolution)
         k += 1
-        T *= C
+        T *= 0.99995
 
+    pool.close()
+    pool.join()
     return E(currentSolution), currentSolution
 
 def E(solution):
@@ -57,4 +71,4 @@ def getNeighbor(currentSolution):
     b = random.randint(0, numberOfCities-a)
     neighbor = list(currentSolution)
     neighbor[b:(b+a)] = reversed(neighbor[b:(b+a)])
-    return neighbor
+    return E(neighbor), neighbor
