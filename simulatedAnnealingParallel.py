@@ -42,7 +42,7 @@ def simulatedAnnealingParallel(listOfCities):
             print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
             currentSolution = list(newSolution)
         k += 1
-        T *= 0.99995
+        T *= C 
 
     pool.close()
     pool.join()
