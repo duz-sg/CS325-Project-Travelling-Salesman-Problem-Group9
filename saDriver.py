@@ -30,6 +30,9 @@ elif sys.argv[2] == 's':
 
     writeOutput(pathToInputFile, distance, orderedListOfCities)
 elif sys.argv[2] == 'p':
+    # Test InputFunction
+    pathToInputFile = sys.argv[1]
+    cities = readInput(pathToInputFile)
     # Print results
     print "------------------------------------------"
     startTime = datetime.now()
