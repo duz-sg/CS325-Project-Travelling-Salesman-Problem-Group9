@@ -21,27 +21,28 @@ def simulatedAnnealingParallel(listOfCities):
     global numberOfCities
     numberOfCities = len(listOfCities)
     newSolution = []
+    N = 24          # Numer of Processes
     T = 1000        # Temperature
     C = 0.99995     # Cooling rate
     k = 0
-    pool = Pool(16)
+    pool = Pool(N)
 
     while T > 0.000000000000001:
-        args = [currentSolution] * 16
+        args = [currentSolution] * N
         results = pool.map(getNeighbor, args)
 
         distances = []
         minDistance = float("inf")
         for result in results:
-            if i[0] < minDistance:
+            if result[0] < minDistance:
                 minDistance = result[0]
                 newSolution = result[1]
 
         if P(E(currentSolution), minDistance, T) >= random.random():
             print "Step: ", k, "Temperature: ", T, "Distance: ", minDistance
             currentSolution = list(newSolution)
-        k += 1
-        T *= C
+        k += N
+        T *= C**N
 
     pool.close()
     pool.join()
