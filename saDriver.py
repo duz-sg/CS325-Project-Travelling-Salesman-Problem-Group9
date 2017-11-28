@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import math
 import sys
-from sets import Set
+from datetime import datetime
 from IOTSPData import readInput, writeOutput
 from simulatedAnnealing import simulatedAnnealing
 
@@ -12,10 +12,16 @@ else:
     # Test InputFunction
     pathToInputFile = sys.argv[1]
     cities = readInput(pathToInputFile)
-
+    # Print results
+    print "------------------------------------------"
+    startTime = datetime.now()
     distance, orderedListOfCities = simulatedAnnealing(cities)
+    endTime = datetime.now()
 
-    print('distance: ', distance)
+    print "Total Running Time: ", str(endTime - startTime)
+    print "Distance: ", distance
+    print "------------------------------------------\n"
+
     writeOutput(pathToInputFile, distance, orderedListOfCities)
     
     

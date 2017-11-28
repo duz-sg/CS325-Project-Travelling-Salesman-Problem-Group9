@@ -29,7 +29,7 @@ def simulatedAnnealing(listOfCities):
             print "Step: ", k, "Temperature: ", T, "Distance: ", E(newSolution)
             currentSolution = list(newSolution)
         k += 1
-        T *= 0.9995
+        T *= 0.99995
 
     return E(currentSolution), currentSolution
 
