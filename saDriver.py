@@ -42,4 +42,5 @@ else:
     print "Distance: ", distance
     print "------------------------------------------\n"
 
-    writeOutput(pathToInputFile, distance, orderedListOfCities)
+    extension = "SA-" + sys.argv[2]
+    writeOutput(pathToInputFile, distance, orderedListOfCities, extension)
