@@ -2,10 +2,11 @@ import math
 import random
 from random import shuffle
 from nearestNeighbor import nearestNeighborAlgorithm
+from multiprocessing import Pool
 
 global numberOfCities
 
-def simulatedAnnealing(listOfCities, coolDownRate):
+def simulatedAnnealingParallel(listOfCities):
     # Let s = s0
     # For k = 0 through kmax (exclusive):
     #   T <- temperature(k / kmax)
@@ -14,28 +15,37 @@ def simulatedAnnealing(listOfCities, coolDownRate):
     #       s <- snew
     # Output: the final state s
 
+    currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
+    #distance, currentSolution = nearestNeighborAlgorithm(listOfCities, 0, 0, 1) # Init the solution using Nearest Neighbor Algorithm
+
     global numberOfCities
     numberOfCities = len(listOfCities)
     newSolution = []
-    T = 1000                        # Temperature
-    C = coolDownRate or 0.99995     # Cooling rate
-    S = 0.000000000000001           # Stop temperature
+    N = 24          # Numer of Processes
+    T = 1000        # Temperature
+    C = 0.99995     # Cooling rate
     k = 0
+    pool = Pool(N)
 
-    currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
-    currentDistance = E(currentSolution)
+    while T > 0.000000000000001:
+        args = [currentSolution] * N
+        results = pool.map(getNeighbor, args)
 
-    while T > S:
-        newSolution = getNeighbor(currentSolution)
-        newDistance = E(newSolution)
-        if P(currentDistance, newDistance, T) >= random.random():
+        distances = []
+        minDistance = float("inf")
+        for result in results:
+            if result[0] < minDistance:
+                minDistance = result[0]
+                newSolution = result[1]
+
+        if P(E(currentSolution), minDistance, T) >= random.random():
+            print "Step: ", k, "Temperature: ", T, "Distance: ", minDistance
             currentSolution = list(newSolution)
-            currentDistance = newDistance
-        if k % 1000 == 0:
-            print "Step: ", k, "Temperature: ", T, "Distance: ", currentDistance
-        k += 1
-        T *= C
+        k += N
+        T *= C**N
 
+    pool.close()
+    pool.join()
     return E(currentSolution), currentSolution
 
 def E(solution):
@@ -61,4 +71,4 @@ def getNeighbor(currentSolution):
     b = random.randint(0, numberOfCities-a)
     neighbor = list(currentSolution)
     neighbor[b:(b+a)] = reversed(neighbor[b:(b+a)])
-    return neighbor
+    return E(neighbor), neighbor
