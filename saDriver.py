@@ -8,7 +8,7 @@ from simulatedAnnealingParallel import simulatedAnnealingParallel
 
 def printUsage():
     print
-    print "Usage: ./saDriver.py <PATH_TO_INPUT_FILE> ([p|s])"
+    print "Usage: ./saDriver.py <PATH_TO_INPUT_FILE> <MODE>"
     print "Example: ./saDriver.py ./TSP_Files-1/tsp_example_1.txt fast     # Fast, better speed"
     print "Example: ./saDriver.py ./TSP_Files-1/tsp_example_1.txt normal   # Normal"
     print "Example: ./saDriver.py ./TSP_Files-1/tsp_example_1.txt slow     # Slow, shorter distance"
@@ -42,5 +42,5 @@ else:
     print "Distance: ", distance
     print "------------------------------------------\n"
 
-    extension = "SA-" + sys.argv[2]
+    extension = ".tour-SA-" + sys.argv[2]
     writeOutput(pathToInputFile, distance, orderedListOfCities, extension)

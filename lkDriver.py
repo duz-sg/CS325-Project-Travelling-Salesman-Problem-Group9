@@ -29,4 +29,5 @@ else:
     print "Distance: ", distance
     print "------------------------------------------\n"
 
-    writeOutput(pathToInputFile, distance, orderedListOfCities)
+    extension = ".tour-LK"
+    writeOutput(pathToInputFile, distance, orderedListOfCities, extension)
