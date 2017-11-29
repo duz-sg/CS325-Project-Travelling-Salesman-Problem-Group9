@@ -6,6 +6,7 @@ from IOTSPData import readInput, writeOutput
 from nearestNeighbor import nearestNeighborAlgorithm, repetitiveNearestNeighbor
 from simulatedAnnealing import simulatedAnnealing
 
+outputFileExtension = '.tour'
 
 # Function for presenting results
 def printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title):
@@ -17,7 +18,7 @@ def printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime
     print "------------------------------------------\n"
 
     # Write results to output file for verification
-    writeOutput(pathToInputFile, distance, orderedListOfCities)
+    writeOutput(pathToInputFile, distance, orderedListOfCities, outputFileExtension)
 
 def resetCitiesToUnvisited(cities):
     for city in cities:
@@ -66,18 +67,19 @@ else:
     # Setup
     pathToInputFile = sys.argv[1]
     cities = readInput(pathToInputFile)
-
-    print "\nTODO - We should pick only one of these algorithms and comment out the rest"
-    print "TODO - Change file extension from .tourTest to .tour before submitting project\n"
     
     # Nearest Neighbor Algorithm (Single run using index 0 as starting city)
-    runNearestNeighbor(cities)
+    # outputFileExtension = '.tour_Single-NN'
+    # runNearestNeighbor(cities)
 
     # Repetitive Nearest Neighbor Algorithm
+    outputFileExtension = '.tour_Repetitive-NN'
     runRepetitiveNearestNeighbor(cities)
 
     # Simulated Annealing
-    runSimulatedAnnealingAlgorithm(cities)
+    #outputFileExtension = '.tour_SA'
+    #runSimulatedAnnealingAlgorithm(cities)
+
 
     
     
