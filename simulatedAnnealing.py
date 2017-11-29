@@ -58,7 +58,7 @@ def findDistance(city1, city2):
 
 def getNeighbor(currentSolution):
     # Get a random neighbor by reversing a random sub-path of existing solution
-    a = random.randint(2, 20)
+    a = random.randint(2, numberOfCities-1)
     b = random.randint(0, numberOfCities-a)
     neighbor = list(currentSolution)
     neighbor[b:(b+a)] = reversed(neighbor[b:(b+a)])
