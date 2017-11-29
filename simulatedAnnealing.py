@@ -17,13 +17,14 @@ def simulatedAnnealing(listOfCities, coolDownRate):
     global numberOfCities
     numberOfCities = len(listOfCities)
     newSolution = []
-    T = 1000                        # Temperature
+    T = 100                         # Temperature
     C = coolDownRate or 0.99995     # Cooling rate
     S = 0.000000000000001           # Stop temperature
     k = 0
 
-    currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
-    currentDistance = E(currentSolution)
+    currentDistance, currentSolution = nearestNeighborAlgorithm(listOfCities, 0, 0, 1) 
+    #currentSolution = list(listOfCities)  # Init the solution to be the path given by input txt
+    #currentDistance = E(currentSolution)
 
     while T > S:
         newSolution = getNeighbor(currentSolution)
@@ -57,7 +58,7 @@ def findDistance(city1, city2):
 
 def getNeighbor(currentSolution):
     # Get a random neighbor by reversing a random sub-path of existing solution
-    a = random.randint(2, numberOfCities-1)
+    a = random.randint(2, 20)
     b = random.randint(0, numberOfCities-a)
     neighbor = list(currentSolution)
     neighbor[b:(b+a)] = reversed(neighbor[b:(b+a)])

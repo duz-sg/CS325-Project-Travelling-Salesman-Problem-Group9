@@ -42,5 +42,5 @@ else:
     print "Distance: ", distance
     print "------------------------------------------\n"
 
-    extension = ".tour-SA-" + sys.argv[2]
+    extension = ".tour-SA-NN-" + sys.argv[2]
     writeOutput(pathToInputFile, distance, orderedListOfCities, extension)
