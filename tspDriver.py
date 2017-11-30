@@ -47,12 +47,12 @@ def runRepetitiveNearestNeighbor(cities):
     printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
 
 # Simulated Annealing Algorithm
-def runSimulatedAnnealingAlgorithm(cities):
+def runSimulatedAnnealingAlgorithm(cities, coolDownRate):
     print "Simulated Annealing..."
     resetCitiesToUnvisited(cities)
     title = "Simulated Annealing Algorithm"
     startTime = datetime.now()
-    distance, orderedListOfCities = simulatedAnnealing(cities)
+    distance, orderedListOfCities = simulatedAnnealing(cities, coolDownRate)
     endTime = datetime.now()
     printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
 
@@ -73,12 +73,18 @@ else:
     # runNearestNeighbor(cities)
 
     # Repetitive Nearest Neighbor Algorithm
-    outputFileExtension = '.tour_Repetitive-NN'
-    runRepetitiveNearestNeighbor(cities)
+    #outputFileExtension = '.tour_Repetitive-NN'
+    #runRepetitiveNearestNeighbor(cities)
 
-    # Simulated Annealing
-    #outputFileExtension = '.tour_SA'
-    #runSimulatedAnnealingAlgorithm(cities)
+    # Nearest-Neighbor/Simulated Annealing Combination
+    outputFileExtension = '.tour_NN-SA-Combination'
+    if (len(cities) > 1000):
+        # User nearest neighbor only
+        runNearestNeighbor(cities)
+    else:
+        # Use Nearest-Neighbor/Simulated Annealing
+        coolDownRate = 0.9995 #Fast
+        runSimulatedAnnealingAlgorithm(cities, coolDownRate)
 
 
     
