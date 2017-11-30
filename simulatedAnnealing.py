@@ -33,8 +33,8 @@ def simulatedAnnealing(listOfCities, coolDownRate):
         if P(currentDistance, newDistance, T) >= random.random():
             currentSolution = list(newSolution)
             currentDistance = newDistance
-        if k % 1000 == 0:
-            print "Step: ", k, "Temperature: ", T, "Distance: ", currentDistance
+        #if k % 1000 == 0:
+        #    print "Step: ", k, "Temperature: ", T, "Distance: ", currentDistance
         k += 1
         T *= C
 
