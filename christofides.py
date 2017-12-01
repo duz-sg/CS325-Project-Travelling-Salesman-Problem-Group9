@@ -10,7 +10,7 @@ def create_graph(input_file):
 		y_coords = []
 		edges = []
 
-		vertices = dict()
+		vert_dict = dict()
 
 		i = 0
 		for line in file:
@@ -30,14 +30,14 @@ def create_graph(input_file):
 				y2 = y_coords[m]
 				graph[n][m] = int(math.sqrt(((x1 - x2)**2 + (y1 - y2)**2)))
 				edges.append((n, m))
-				vertices[(n, m)] = graph[n][m]
+				vert_dict[(n, m)] = graph[n][m]
 
-	return graph, vertices, edges
+	return graph, vert_dict, edges, cities
 
 def create_mst(graph):
-	#source -- https://gist.github.com/siddMahen/8261350
+	#Referemce -- https://gist.github.com/siddMahen/8261350
 
-	MST = set() 		# The Minimum Spanning Tree to be returned
+	MST = []			# The Minimum Spanning Tree to be returned
 	visited = set() 	# The set of edges already connected
 
 	# select an arbitrary vertex to begin with
@@ -55,7 +55,7 @@ def create_mst(graph):
 		# find the edge with the smallest weight in crossing
 		edge = sorted(crossing, key=lambda e:graph[e[0]][e[1]])[0];
 		# add this edge to MST
-		MST.add(edge)
+		MST.append(edge)
 		# add the new vertex to visited
 		visited.add(edge[1])
 
@@ -76,13 +76,7 @@ def find_odd_vertices(MST, n):
 	return odd
 
 
-
 # Source: https://github.com/koniiiik/edmonds-blossom
-
-def find_mwmp(vertices):
-	return blossom.calculate_mwmp(vertices)
-
-
 
 
 def find_induced_graph(graph, MST, odd):
@@ -94,24 +88,79 @@ def find_induced_graph(graph, MST, odd):
 				if graph[i][j] != 0: # Only take edges that are in the graph
 					induced_graph.append((i, j))
 
-	# matching = []
-
-	# for edge in induced_graph:
-	# 	for v, u in edge:
-	# 		if 
-
 	return induced_graph
+
+def create_multigraph(MST, mwpm):
+	multigraph = MST + mwpm
+	return multigraph
+
+
+#Adapted from https://github.com/feynmanliang/Euler-Tour/blob/master/FindEulerTour.py
+def find_euler_path(multigraph, vertices):
+	graph = multigraph
+	path = []
+
+	cur_vert = graph[0][0]
+
+	# print "In Euler tour. Length of multigraph:"
+	print len(graph)
+
+	for e in graph:
+		print e
+
+	while len(graph) != 0:
+		print "Top of loop. Length of graph: {}".format(len(graph))
+		for e in graph:
+			if cur_vert in e:
+				print "Found edge {}".format(e)
+				cur_edge = e
+				path.append(cur_edge)
+				if cur_vert == cur_edge[0]:
+					cur_vert = cur_edge[1]
+				elif cur_vert == cur_edge[1]:
+					cur_vert = cur_edge[0]
+				graph.remove(cur_edge)
+				# print "Length of graph: {}".format(len(graph))
+				continue
+
+	return path
 
 
 f = sys.argv[1]
-graph, vertices, edges = create_graph(f)
+graph, vert_dict, edges, vertices = create_graph(f)
 t = create_mst(graph)
 o = find_odd_vertices(t, len(graph))
 i = find_induced_graph(graph, t, o)
 
-with open("blossominput.txt", 'w') as bl:
-	bl.write("{} {}\n".format(len(graph), len(vertices) - len(graph)))
-	for v, w in vertices.items():
-		if w != 0:
-			bl.write("{} {} {}\n".format(v[0], v[1], w))
 
+# for v in i:
+# 	print v
+
+with open("blossominput.txt", 'w') as bi:
+	bi.write("{} {}\n".format(len(o), len(i)))
+	for e in range(len(i)):
+		v, u = i[e]
+		w = graph[v][u]
+		if w != 0:
+			bi.write("{} {} {}\n".format(v, u, w))
+
+mwpm = []
+
+with open("blossomoutput.txt", "r") as bo:
+	for line in bo:
+		parsed = line.split()
+		edge = (int(parsed[0]), int(parsed[1]))
+		mwpm.append(edge)
+		# print "+"
+
+
+mg = create_multigraph(mwpm, t)
+
+# for m in mg:
+# 	print m
+
+
+ep = find_euler_path(mg, vertices)
+
+for e in ep:
+	print e

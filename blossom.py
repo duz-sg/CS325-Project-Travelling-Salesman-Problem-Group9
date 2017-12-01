@@ -723,4 +723,5 @@ for v in vertices.values():
 
 total_weight = sum(e.value for e in M)
 for e in M:
-    print("%s %s" % (e, e.value))
+    v, u = e.vertices
+    print("%d %d %d" % (v.id, u.id, int(e.value)))
