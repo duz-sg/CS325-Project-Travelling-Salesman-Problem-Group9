@@ -1,5 +1,6 @@
 import math
 import sys
+# import blossom
 
 def create_graph(input_file):
 	with open(input_file, 'r') as file:
@@ -8,6 +9,8 @@ def create_graph(input_file):
 		x_coords = []
 		y_coords = []
 		edges = []
+
+		vertices = dict()
 
 		i = 0
 		for line in file:
@@ -20,17 +23,16 @@ def create_graph(input_file):
 		graph = [[0 for x in range(i)] for y in range (i)]
 
 		for n in range(i):
-			for m in range(i - n):
+			for m in range(i):
 				x1 = x_coords[n]
 				x2 = x_coords[m]
 				y1 = y_coords[n]
 				y2 = y_coords[m]
-				graph[n][m] = math.sqrt(((x1 - x2)**2 + (y1 - y2)**2))
+				graph[n][m] = int(math.sqrt(((x1 - x2)**2 + (y1 - y2)**2)))
 				edges.append((n, m))
+				vertices[(n, m)] = graph[n][m]
 
-
-
-	return graph, cities, edges
+	return graph, vertices, edges
 
 def create_mst(graph):
 	#source -- https://gist.github.com/siddMahen/8261350
@@ -75,11 +77,15 @@ def find_odd_vertices(MST, n):
 
 
 
-def blossom(vertices, edges):
-	# Source: https://github.com/koniiiik/edmonds-blossom
-	pass
+# Source: https://github.com/koniiiik/edmonds-blossom
 
-def find_matching(graph, MST, odd):
+def find_mwmp(vertices):
+	return blossom.calculate_mwmp(vertices)
+
+
+
+
+def find_induced_graph(graph, MST, odd):
 	induced_graph = []
 
 	for i in odd:
@@ -88,8 +94,7 @@ def find_matching(graph, MST, odd):
 				if graph[i][j] != 0: # Only take edges that are in the graph
 					induced_graph.append((i, j))
 
-
-	matching = []
+	# matching = []
 
 	# for edge in induced_graph:
 	# 	for v, u in edge:
@@ -99,19 +104,14 @@ def find_matching(graph, MST, odd):
 
 
 f = sys.argv[1]
-g, v, e = create_graph(f)
-t = create_mst(g)
-o = find_odd_vertices(t, len(g))
-i = find_matching(g, t, o)
+graph, vertices, edges = create_graph(f)
+t = create_mst(graph)
+o = find_odd_vertices(t, len(graph))
+i = find_induced_graph(graph, t, o)
 
-for x in g:
-	print x
+with open("blossominput.txt", 'w') as bl:
+	bl.write("{} {}\n".format(len(graph), len(vertices) - len(graph)))
+	for v, w in vertices.items():
+		if w != 0:
+			bl.write("{} {} {}\n".format(v[0], v[1], w))
 
-for x in t:
-	print x
-
-for x in o:
-	print x
-
-for x in i:
-	print x
