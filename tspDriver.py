@@ -96,7 +96,7 @@ else:
     # runChristofides(pathToInputFile)
 
     # Nearest-Neighbor/Simulated Annealing Combination
-    outputFileExtension = '.tour_NN-SA-Combination'
+    outputFileExtension = '.tour'
     if (len(cities) > 1000):
         # User nearest neighbor only
         runNearestNeighbor(cities)
