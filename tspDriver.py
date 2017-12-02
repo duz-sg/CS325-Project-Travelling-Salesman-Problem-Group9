@@ -93,16 +93,16 @@ else:
 
 
     # Christofides Algorithm 
-    runChristofides(pathToInputFile)
+    # runChristofides(pathToInputFile)
 
     # Nearest-Neighbor/Simulated Annealing Combination
-    # outputFileExtension = '.tour_NN-SA-Combination'
-    # if (len(cities) > 1000):
-    #     # User nearest neighbor only
-    #     runNearestNeighbor(cities)
-    # else:
-    #     # Use Nearest-Neighbor/Simulated Annealing
-    #     coolDownRate = 0.9995 #Fast
-    #     runSimulatedAnnealingAlgorithm(cities, coolDownRate)
+    outputFileExtension = '.tour_NN-SA-Combination'
+    if (len(cities) > 1000):
+        # User nearest neighbor only
+        runNearestNeighbor(cities)
+    else:
+        # Use Nearest-Neighbor/Simulated Annealing
+        coolDownRate = 0.9995 #Fast
+        runSimulatedAnnealingAlgorithm(cities, coolDownRate)
 
 
