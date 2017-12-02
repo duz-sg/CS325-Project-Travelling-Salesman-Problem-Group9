@@ -77,7 +77,7 @@ def runChristofides(input_file):
 ################################################
 if (len(sys.argv) != 2):
     print "Usage: ./tspDriver.py <PATH_TO_INPUT_FILE>"
-    print "Example:zz ./tspDriver.py ./TSP_Files-1/tsp_example_1.txt"
+    print "Example: ./tspDriver.py ./TSP_Files-1/tsp_example_1.txt"
 else:
     # Setup
     pathToInputFile = sys.argv[1]
