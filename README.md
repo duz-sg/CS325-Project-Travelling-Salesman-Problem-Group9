@@ -10,3 +10,4 @@ Trevor D Worthey	wortheyt@oregonstate.edu
 
 #### Notes
 - Please run this using Python 2.x
+- Report is contained in this folder, titled "CS325-Project-Traveling-Salesman-Problem-Group9.pdf"
