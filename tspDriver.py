@@ -5,6 +5,7 @@ from datetime import datetime
 from IOTSPData import readInput, writeOutput
 from nearestNeighbor import nearestNeighborAlgorithm, repetitiveNearestNeighbor
 from simulatedAnnealing import simulatedAnnealing
+from christofides import run_christofides
 
 outputFileExtension = '.tour'
 
@@ -56,13 +57,27 @@ def runSimulatedAnnealingAlgorithm(cities, coolDownRate):
     endTime = datetime.now()
     printResultsAndWriteOutput(distance, orderedListOfCities, startTime, endTime, title)
 
+# Christofides
+def runChristofides(input_file):
+    print "Christofides..."
+    title = "Christofides Algorithm"
+    startTime = datetime.now()
+    distance, orderedListOfCities = run_christofides(input_file)
+    endTime = datetime.now()
+
+    print "------------------------------------------"
+    print title
+    print "Total Running Time: ", str(endTime - startTime)
+    print "Distance: ", distance
+    print "------------------------------------------\n"   
+
 
 ################################################
 # Main Driver Program
 ################################################
 if (len(sys.argv) != 2):
     print "Usage: ./tspDriver.py <PATH_TO_INPUT_FILE>"
-    print "Example: ./tspDriver.py ./TSP_Files-1/tsp_example_1.txt"
+    print "Example:zz ./tspDriver.py ./TSP_Files-1/tsp_example_1.txt"
 else:
     # Setup
     pathToInputFile = sys.argv[1]
@@ -76,16 +91,18 @@ else:
     #outputFileExtension = '.tour_Repetitive-NN'
     #runRepetitiveNearestNeighbor(cities)
 
+
+    # Christofides Algorithm 
+    runChristofides(pathToInputFile)
+
     # Nearest-Neighbor/Simulated Annealing Combination
-    outputFileExtension = '.tour_NN-SA-Combination'
-    if (len(cities) > 1000):
-        # User nearest neighbor only
-        runNearestNeighbor(cities)
-    else:
-        # Use Nearest-Neighbor/Simulated Annealing
-        coolDownRate = 0.9995 #Fast
-        runSimulatedAnnealingAlgorithm(cities, coolDownRate)
+    # outputFileExtension = '.tour_NN-SA-Combination'
+    # if (len(cities) > 1000):
+    #     # User nearest neighbor only
+    #     runNearestNeighbor(cities)
+    # else:
+    #     # Use Nearest-Neighbor/Simulated Annealing
+    #     coolDownRate = 0.9995 #Fast
+    #     runSimulatedAnnealingAlgorithm(cities, coolDownRate)
 
 
-    
-    

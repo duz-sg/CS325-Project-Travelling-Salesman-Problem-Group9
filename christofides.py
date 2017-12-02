@@ -1,44 +1,49 @@
 import math
 import sys
 from collections import defaultdict
-# import blossom
+import blossom
 
+# Create graph from input file
 def create_graph(input_file):
 	with open(input_file, 'r') as file:
-		print "Opening file"
-		cities = []
-		x_coords = []
-		y_coords = []
-		edges = []
+		cities = []		# Holds the vertex numbers -- line item 0
+		x_coords = []	# Holds x coordinates -- line item 1
+		y_coords = []	# Holds y coordinates -- line item 2
+		edges = []		# A list of tuples representing edges between vertices
 
-		vert_dict = dict()
+		weight_dict = dict()	# A dictionary mapping edges to weight values
 
-		i = 0
 		for line in file:
-			parsed = line.rsplit()
+			parsed = line.rsplit()			# Split the line up
 			cities.append(int(parsed[0]))
 			x_coords.append(int(parsed[1])) 
 			y_coords.append(int(parsed[2]))
 			i += 1
 
-		graph = [[0 for x in range(i)] for y in range (i)]
+		# Number of Vertices
+		size = len(cities)
 
+		# graph - Holds a distance matrix representing the graph in total
+		graph = [[0 for x in range(size)] for y in range (size)]
+
+		# Fill the graph
 		for n in range(i):
 			for m in range(i):
 				x1 = x_coords[n]
 				x2 = x_coords[m]
 				y1 = y_coords[n]
-				y2 = y_coords[m]
-				graph[n][m] = int(math.sqrt(((x1 - x2)**2 + (y1 - y2)**2)))
-				edges.append((n, m))
-				vert_dict[(n, m)] = graph[n][m]
+				y2 = y_coords[m]					# vv Calculate weight vv
+				graph[n][m] = int(round(math.sqrt(((x1 - x2)**2 + (y1 - y2)**2))))
+				edges.append((n, m))				# Add to edges
+				weight_dict[(n, m)] = graph[n][m]	# Fill the dictionary of weights
 
-	return graph, vert_dict, edges, cities
+	return graph, weight_dict, edges, cities		# Return everything we'd ever need
 
+# Create a Minimum Spanning Tree from the passed in graph (as a distance matrix)
+# Source -- https://gist.github.com/siddMahen/8261350
 def create_mst(graph):
-	#Referemce -- https://gist.github.com/siddMahen/8261350
 
-	MST = []			# The Minimum Spanning Tree to be returned
+	MST = []			# The Minimum Spanning Tree to be returned -- A list of edges (tuples)
 	visited = set() 	# The set of edges already connected
 
 	# select an arbitrary vertex to begin with
@@ -62,6 +67,7 @@ def create_mst(graph):
 
 	return MST
 
+# Returns a list of odd vertices in the MST for use in building an induced graph
 def find_odd_vertices(MST, n):
 
 	odd = []
@@ -69,179 +75,158 @@ def find_odd_vertices(MST, n):
 		count = 0
 		for edge in MST:
 			if i in edge:
-				count += 1
+				count += 1	# Determine degree of each vertex
 
-		if count % 2 != 0:
+		if count % 2 != 0:	# Add odd vertices to the list
 			odd.append(i)
 
 	return odd
 
-
-# Source: https://github.com/koniiiik/edmonds-blossom
-
-
-def find_induced_graph(graph, MST, odd):
+# Creates an induced graph by connecting the vertices of odd degree
+def find_induced_graph(graph, odd):
 	induced_graph = []
 
 	for i in odd:
 		for j in odd:
-			if (i, j) not in induced_graph and (j, i) not in induced_graph:
+			if (i, j) not in induced_graph and (j, i) not in induced_graph: # We don't need duplicate edges here
 				if graph[i][j] != 0: # Only take edges that are in the graph
 					induced_graph.append((i, j))
 
 	return induced_graph
 
-def create_multigraph(MST, mwpm, vertices):
+
+def create_multigraph(MST, mwpm):
 	multigraph = MST + mwpm
+	return multigraph
 
-	degrees = dict()
-
-	for v in vertices:
-		degree = 0
-		for e in multigraph:
-			if v in e:
-				degree += 1
-
-		degrees[v] = degree
-
-	return multigraph, degrees
-
-
-#Adapted from https://github.com/feynmanliang/Euler-Tour/blob/master/FindEulerTour.py
-def find_euler_path(multigraph, vertices, degrees):
-
+# Returns a Eulerian tour (actually a circuit) given the inputed multigraph
+# Source -- https://github.com/feynmanliang/Euler-Tour/blob/master/FindEulerTour.py
+def find_euler_tour(multigraph):
+	
 	graph = multigraph
 
-	path = []
-
-	start = graph[0][0]
-	cur_vert = graph[0][0]
-
-	# print "In Euler tour. Length of multigraph:"
-	print len(graph)
-
-	while len(graph) != 0:
-		print "Top of loop. Length of graph: {}".format(len(graph))
-
-		for e in graph:
-			if cur_vert in e:
-
-
-
-				print "Found edge {}".format(e)
-				cur_edge = e
-				path.append(cur_edge)
-				if cur_vert == cur_edge[0]:
-					cur_vert = cur_edge[1]
-				elif cur_vert == cur_edge[1]:
-					cur_vert = cur_edge[0]
-				graph.remove(cur_edge)
-				# print "Length of graph: {}".format(len(graph))
-
-	return path
-
-# Adapted from https://github.com/feynmanliang/Euler-Tour/blob/master/FindEulerTour.py
-def find_euler_tour(graph):
 	tour = []
-	E = graph
 	numEdges = defaultdict(int)
-
+	
+	# Recursively finds a Eulerian tour from a given starting node
 	def find_tour(u):
-		for e in range(len(E)):
-			if E[e] == 0:
+		
+		for e in range(len(graph)):
+			if graph[e] == 0:		# Skip empty edges
 				continue
-			if u == E[e][0]:
-				u, v = E[e]
-				E[e] = 0
+			if u == graph[e][0]:	# If the vertex u is the first vertex of the first edge
+				u, v = graph[e]
+				graph[e] = 0
 				find_tour(v)
-			elif u == E[e][1]:
-				v, u = E[e]
-				E[e] = 0
+			elif u == graph[e][1]:	# If the vertex u is the second vertex of the first edge
+				v, u = graph[e]
+				graph[e] = 0
 				find_tour(v)
+		
+		# Insert each vortex as the recursive calls return
 		tour.insert(0, u)
 
+	# Count the number of edges incident on each vertex
 	for e in graph:
 		i, j = e
 		numEdges[i] += 1
 		numEdges[j] += 1
 
 	start = graph[0][0]
-	current = start
 
+	current = start
 	find_tour(current)
 
 	return tour
 
 
-def find_hamil_circuit(path):
+# Finds a Hamiltonian circuit using the Eulerian circuit -- This is our TSP Tour!
+def find_ham_circuit(path):
 
 	circuit = []
 
-	for v in path:
+	for v in path:				# Shortcut at node that is already in the list
 		if v not in circuit:
 			circuit.append(v)
 
-	return circuit
+	return circuit 				# Returns the Ham-Circuit, which is the final TSP tour
 
 
+# Takes the graph and the final tour, and calculates the actual weight
 def calculate_tour(graph, circuit):
 
 	tour_weight = 0
 
 	for i in range(len(circuit)):
 		current = circuit[i]
-		if i == len(circuit) - 1:
-			i = -1
+		if i == len(circuit) - 1:	# Break on the last node and handle completing the circuit separately
+			break
 		else:
-			i += 1
-		next_node = circuit[i]
-		tour_weight += graph[current][next_node]
+			i += 1								 # Look ahead to the next node
+		next_node = circuit[i]		
+		tour_weight += graph[current][next_node] # Add the weight of the edge to the total
+
+	tour_weight += graph[circuit[0]][circuit[-1]]		# Account for the final 
 
 	return tour_weight
 
 
-f = sys.argv[1]
-graph, vert_dict, edges, vertices = create_graph(f)
-t = create_mst(graph)
-o = find_odd_vertices(t, len(graph))
-i = find_induced_graph(graph, t, o)
+def run_christofides(input_file):
+	file = input_file
 
-# for v in i:
-# 	print v
+	# Variables:
+	# * graph is a distance matrix representing the entire graph
+	# * weight_dict is a dictionary with edges as keys and weights as values
+	# * edges is a list of edges represented as tuples
+	# * vertices is a list of the numerical labels of each vertex
+	graph, weight_dict, edges, vertices = create_graph(file)	# Unpack return values of create_graph()
 
-with open("blossominput.txt", 'w') as bi:
-	bi.write("{} {}\n".format(len(o), len(i)))
-	for e in range(len(i)):
-		v, u = i[e]
-		w = graph[v][u]
-		if w != 0:
-			bi.write("{} {} {}\n".format(v, u, w))
+	# * tree is the MST created from graph, represented by a list of edges
+	tree = create_mst(graph)
 
-mwpm = []
+	# * odd is simply the list of odd-degree vertices in tree
+	odd = find_odd_vertices(tree, len(graph))
 
-with open("blossomoutput.txt", "r") as bo:
-	for line in bo:
-		parsed = line.split()
-		edge = (int(parsed[0]), int(parsed[1]))
-		mwpm.append(edge)
-		# print "+"
+	# * induced is a graph formed by connecting the edges in odd
+	induced = find_induced_graph(graph, odd)
 
+	# These will hold inputs for the blossom algorithm call below
+	induced_edges = []
+	induced_weights = []
 
-mg, degrees = create_multigraph(mwpm, t, vertices)
+	# Fill the above lists with their respective data
+	for e in range(len(induced)):
+		v, u = induced[e]	# Unpack the edges
+		w = graph[v][u]		
+		induced_edges.append((v, u)) # Fill the edge list
+		induced_weights.append(w)	 # Fill the weights list
 
-# for m in mg:
-# 	print m
+	# Source of blossom code: https://github.com/koniiiik/edmonds-blossom
+	# Edmonds' Blossom algorithm allows us to find a minimum weight perfect matching of the induced graph
+	# Code contained in blossom.py, modified slightly to accomodate different input and output formats
+	# * matching is the list of edges in the Minimum Weight Perfect Matching of the induced graph
+	matching = blossom.calculate_matching(induced_edges, induced_weights)
 
-ep = find_euler_tour(mg)
+	# * multi_graph is a graph formed by merging the edges in tree with the edges in tree 
+	multi_graph = create_multigraph(matching, tree, vertices)
 
-# for e in ep:
-# 	print e
+	# * euler_path is the Eulerian Circuit created by traversing every edge of the multigraph once -- a list of vertices
+	euler_path = find_euler_tour(multi_graph)
 
-c = find_hamil_circuit(ep)
+	# * ham_circuit is the Hamiltonian circuit obtained by shortcutting any repeated nodes in euler_path -- also a list of vertices
+	ham_circuit = find_ham_circuit(euler_path)	# ham_circuit is our final TSP tour!
 
-# for v in c:
-# 	print v
+	# * total_weight is the final tour cost calculated by traversing ham_circuit
+	total_weight = calculate_tour(graph, ham_circuit)
 
-w = calculate_tour(graph, c)
+	# Handle output within Project paramters
+	filename = input_file + ".tour_Christofides"
 
-print w
+	with open(filename, 'w') as output:
+		output.write(str(w) + "\n")
+		for v in c:
+			output.write(str(v) + "\n")
+		output.write(str(0))
+
+	# Return our results in case anyone is listening
+	return w, c

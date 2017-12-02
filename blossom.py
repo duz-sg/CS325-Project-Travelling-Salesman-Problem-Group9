@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+Adapted and modified from https://github.com/koniiiik/edmonds-blossom
+
 An implementation of Edmonds' blossom algorithm for finding minimum-weight
 maximum matchings.
 """
@@ -17,6 +19,8 @@ LEVEL_ODD = 1
 LEVEL_OOT = -1
 # Blossoms embedded in another blossom.
 LEVEL_EMBED = -2
+
+roots = set()
 
 
 def cached_property(fun):
@@ -671,13 +675,14 @@ def get_max_delta():
     return delta
 
 
-def read_input(input_file):
-    N, M = [int(x) for x in next(input_file).split()]
+def read_input(edges, weights):
     vertices = dict()
     max_weight = 0
 
-    for line in input_file:
-        u, v, w = [int(x) for x in line.split()]
+    i = 0
+    for edge in edges:
+        w = weights[i]
+        u, v = edge
         for _v in (u, v):
             if _v not in vertices:
                 vertices[_v] = Vertex(_v)
@@ -701,27 +706,27 @@ def update_tree_structures():
         pass
 
 
-if len(sys.argv) > 1:
-    input_file = open(sys.argv[1])
-else:
-    input_file = sys.stdin
-vertices = read_input(input_file)
-roots = set(vertices.values())
-try:
-    while True:
-        delta = get_max_delta()
-        sys.stderr.write("Adjusting by %s\n" % (delta,))
-        for root in roots:
-            root.adjust_charge(delta)
-        update_tree_structures()
-except MaximumDualReached:
-    pass
+def calculate_matching(edges, weights):
+    vertices = read_input(edges, weights)
+    roots = set(vertices.values())
+    try:
+        while True:
+            delta = get_max_delta()
+            for root in roots:
+                root.adjust_charge(delta)
+            update_tree_structures()
+    except MaximumDualReached:
+        pass
 
-M = set()
-for v in vertices.values():
-    M.update(e for e in v.edges if e.selected)
+    M = set()
+    for v in vertices.values():
+        M.update(e for e in v.edges if e.selected)
 
-total_weight = sum(e.value for e in M)
-for e in M:
-    v, u = e.vertices
-    print("%d %d %d" % (v.id, u.id, int(e.value)))
+    total_weight = sum(e.value for e in M)
+
+    matching = []
+    for e in M:
+        v, u = e.vertices
+        matching.append((v, u))
+
+    return matching
