@@ -18,7 +18,6 @@ def create_graph(input_file):
 			cities.append(int(parsed[0]))
 			x_coords.append(int(parsed[1])) 
 			y_coords.append(int(parsed[2]))
-			i += 1
 
 		# Number of Vertices
 		size = len(cities)
@@ -27,8 +26,8 @@ def create_graph(input_file):
 		graph = [[0 for x in range(size)] for y in range (size)]
 
 		# Fill the graph
-		for n in range(i):
-			for m in range(i):
+		for n in range(size):
+			for m in range(size):
 				x1 = x_coords[n]
 				x2 = x_coords[m]
 				y1 = y_coords[n]
@@ -208,7 +207,7 @@ def run_christofides(input_file):
 	matching = blossom.calculate_matching(induced_edges, induced_weights)
 
 	# * multi_graph is a graph formed by merging the edges in tree with the edges in tree 
-	multi_graph = create_multigraph(matching, tree, vertices)
+	multi_graph = create_multigraph(matching, tree)
 
 	# * euler_path is the Eulerian Circuit created by traversing every edge of the multigraph once -- a list of vertices
 	euler_path = find_euler_tour(multi_graph)
@@ -224,9 +223,9 @@ def run_christofides(input_file):
 
 	with open(filename, 'w') as output:
 		output.write(str(w) + "\n")
-		for v in c:
+		for v in ham_circuit:
 			output.write(str(v) + "\n")
 		output.write(str(0))
 
 	# Return our results in case anyone is listening
-	return w, c
+	return total_weight, ham_circuit
